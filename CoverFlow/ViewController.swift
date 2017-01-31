@@ -75,23 +75,23 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         // I believe this could be resolved with some optimizations in the update code
         
         let offsetX = scrollView.contentOffset.x
-        let scrollingRight = currentContentOffsetX < offsetX
-        let lastPage = currentPageIndex == (samples.count - 1)
+        let isScrollingRight = currentContentOffsetX < offsetX
+        let isLastPage = currentPageIndex == (samples.count - 1)
         
         let rawPageValue = offsetX / scrollView.bounds.width
-        let currentIndex = scrollingRight ? max(Int(floor(rawPageValue)), 0) : min(Int(ceil(rawPageValue)), samples.count-1)
-        let nextIndex = scrollingRight ? Int(ceil(rawPageValue)) : max(Int(floor(rawPageValue)), 0)
-        let adjustedPageValue = scrollingRight ? abs(rawPageValue - CGFloat(currentIndex)) : (1 - abs(rawPageValue - CGFloat(currentIndex)))
+        let currentIndex = isScrollingRight ? max(Int(floor(rawPageValue)), 0) : min(Int(ceil(rawPageValue)), samples.count-1)
+        let nextIndex = isScrollingRight ? Int(ceil(rawPageValue)) : max(Int(floor(rawPageValue)), 0)
+        let adjustedPageValue = isScrollingRight ? abs(rawPageValue - CGFloat(currentIndex)) : (1 - abs(rawPageValue - CGFloat(currentIndex)))
         var needsUpdating: Bool = false
         
         if currentPageIndex == currentIndex {
-            if lastPage, scrollingRight {
+            if isLastPage, isScrollingRight {
                 // Prevents the last page from applying the fade value to the background image view
                 return
             }
             
-            firstBackgroundImageView.alpha = scrollingRight ? 1 - adjustedPageValue : adjustedPageValue
-            secondBackgroundImageView.alpha = scrollingRight ? adjustedPageValue : 1 - adjustedPageValue
+            firstBackgroundImageView.alpha = isScrollingRight ? 1 - adjustedPageValue : adjustedPageValue
+            secondBackgroundImageView.alpha = isScrollingRight ? adjustedPageValue : 1 - adjustedPageValue
         } else {
             needsUpdating = true
         }
