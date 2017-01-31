@@ -27,6 +27,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         collectionView.decelerationRate = UIScrollViewDecelerationRateFast
         collectionView.backgroundColor = UIColor.clear
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         if let flowLayout = collectionView.collectionViewLayout as? TZPAngularCoverFlowLayout {
             flowLayout.itemSize = CGSize(
                 width: collectionView.bounds.width - (flowLayout.itemSpacing * 2),
@@ -68,7 +72,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         // There is at least one known issue regarding scrolling:
         // 1. Changing direction while between two cells will cause a slight flicker.
         // I believe this could be resolved with some optimizations in the update code
- 
         let offsetX = scrollView.contentOffset.x
         let scrollingRight = currentContentOffsetX < offsetX
         let lastPage = currentPageIndex == (samples.count - 1)

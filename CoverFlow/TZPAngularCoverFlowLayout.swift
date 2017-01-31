@@ -127,25 +127,24 @@ class TZPAngularCoverFlowLayout: UICollectionViewFlowLayout {
             return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
         }
         
+        let scrollingRight = velocity.x >= 0.0
         let rawPageValue = CGFloat(proposedContentOffset.x) / collectionView.bounds.width
-        let currentPageIndex = floor(rawPageValue)
-        let nextPageIndex = ceil(rawPageValue)
-        let adjustedPageValue = rawPageValue - currentPageIndex
+        let currentPageIndex = scrollingRight ? floor(rawPageValue) : ceil(rawPageValue)
+        let nextPageIndex = scrollingRight ? ceil(rawPageValue) : floor(rawPageValue)
+        let adjustedPageValue = scrollingRight ? abs(rawPageValue - currentPageIndex) : (1 - abs(rawPageValue - currentPageIndex))
+    
         
-        var minMin: CGFloat
-        if adjustedPageValue > 0.5 {
-            if flickVelocityThreshold < abs(velocity.x) {
-                minMin = currentPageIndex
-            } else {
-                minMin = nextPageIndex
-            }
+        var minMin: CGFloat = 0.0
+        if flickVelocityThreshold  < abs(velocity.x) {
+            minMin = nextPageIndex
         } else {
-            if flickVelocityThreshold < abs(velocity.x) {
+            if adjustedPageValue > 0.5 {
                 minMin = nextPageIndex
             } else {
                 minMin = currentPageIndex
             }
         }
+        
         let clampedIndex = clamp(minMin: minMin, minMax: CGFloat(numberOfDataSourceItems - 1), maxMax: 0)
         var newXOffset = clampedIndex * collectionView.bounds.width
         newXOffset = newXOffset == 0.0 ? 1.0 : newXOffset
@@ -170,7 +169,7 @@ class TZPAngularCoverFlowLayout: UICollectionViewFlowLayout {
         let maxInterval = CGFloat(attributesPath.row + 1) * collectionViewWidth
         
         let minX: CGFloat = 0.0
-        let maxX: CGFloat = itemWidth()
+        let maxX: CGFloat = collectionView.bounds.width
         let spanX = maxX - minX
         
         let interpolatedX = min(max(minX + ((spanX / (maxInterval - minInterval)) * (xOffset - minInterval)), minX), maxX)
