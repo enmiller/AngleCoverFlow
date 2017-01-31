@@ -69,9 +69,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     fileprivate var currentContentOffsetX: CGFloat = 0.0
     fileprivate var possibleNextIndex: Int = 1
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
         // There is at least one known issue regarding scrolling:
         // 1. Changing direction while between two cells will cause a slight flicker.
         // I believe this could be resolved with some optimizations in the update code
+        
         let offsetX = scrollView.contentOffset.x
         let scrollingRight = currentContentOffsetX < offsetX
         let lastPage = currentPageIndex == (samples.count - 1)
@@ -80,8 +82,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let currentIndex = scrollingRight ? max(Int(floor(rawPageValue)), 0) : min(Int(ceil(rawPageValue)), samples.count-1)
         let nextIndex = scrollingRight ? Int(ceil(rawPageValue)) : max(Int(floor(rawPageValue)), 0)
         let adjustedPageValue = scrollingRight ? abs(rawPageValue - CGFloat(currentIndex)) : (1 - abs(rawPageValue - CGFloat(currentIndex)))
-        
         var needsUpdating: Bool = false
+        
         if currentPageIndex == currentIndex {
             if lastPage, scrollingRight {
                 // Prevents the last page from applying the fade value to the background image view

@@ -128,12 +128,11 @@ class TZPAngularCoverFlowLayout: UICollectionViewFlowLayout {
         }
         
         let scrollingRight = velocity.x >= 0.0
-        let rawPageValue = CGFloat(proposedContentOffset.x) / collectionView.bounds.width
+        let rawPageValue = collectionView.contentOffset.x / collectionView.bounds.width
         let currentPageIndex = scrollingRight ? floor(rawPageValue) : ceil(rawPageValue)
         let nextPageIndex = scrollingRight ? ceil(rawPageValue) : floor(rawPageValue)
         let adjustedPageValue = scrollingRight ? abs(rawPageValue - currentPageIndex) : (1 - abs(rawPageValue - currentPageIndex))
     
-        
         var minMin: CGFloat = 0.0
         if flickVelocityThreshold  < abs(velocity.x) {
             minMin = nextPageIndex
